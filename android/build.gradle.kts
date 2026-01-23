@@ -4,10 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "n7.test"
+    namespace = "n7.snake"
     compileSdk = 36
 
     defaultConfig {
+        applicationId = "n7.snake"
         minSdk = 35
         targetSdk = 36
         versionCode = 1
@@ -16,6 +17,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     buildTypes {
@@ -40,6 +42,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(files("../libs/glyph-matrix-sdk-1.0.aar"))
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.runtime)
     implementation(libs.compose.ui)
@@ -47,4 +50,5 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.activity.compose)
     implementation(libs.material)
+    implementation(libs.play.services.location)
 }

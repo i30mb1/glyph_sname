@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Snake</string>
+    <string name="toy_name">Snake</string>
+    <string name="toy_summary">Classic snake game controlled by tilting your phone</string>
+</resources>

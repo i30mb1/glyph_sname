@@ -1,4 +1,4 @@
-package n7.test
+package n7.snake
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
