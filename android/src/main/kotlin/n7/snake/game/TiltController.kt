@@ -12,36 +12,30 @@ import kotlin.math.abs
 
 public class TiltController(context: Context) {
 
-    private val accelerometer = AccelerometerController(context)
+    private val gyroscope = GyroscopeController(context)
     private var currentDirection: Direction = Direction.RIGHT
     private var scope: CoroutineScope? = null
-
-    private var smoothedX = 0f
-    private var smoothedY = 0f
 
     public var onDirectionChanged: ((Direction) -> Unit)? = null
 
     private companion object {
-        const val SMOOTHING = 0.15f
-        const val THRESHOLD = 2.5f
+        const val THRESHOLD = 1.5f
+        const val DECAY = 0.95f
     }
 
     public fun start() {
         scope?.cancel()
         scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
-        accelerometer.flow
+        gyroscope.flow
             .scan(SensorData(0f, 0f)) { prev, current ->
                 SensorData(
-                    x = prev.x * (1 - SMOOTHING) + current.x * SMOOTHING,
-                    y = prev.y * (1 - SMOOTHING) + current.y * SMOOTHING
+                    x = (prev.x + current.x) * DECAY,
+                    y = (prev.y + current.y) * DECAY
                 )
             }
-            .onEach { data ->
-                smoothedX = data.x
-                smoothedY = data.y
-
-                val newDirection = getDirection(smoothedX, smoothedY)
+            .onEach { accumulated ->
+                val newDirection = getDirection(accumulated.x, accumulated.y)
                 if (newDirection != null && newDirection != currentDirection && !isOpposite(newDirection, currentDirection)) {
                     currentDirection = newDirection
                     onDirectionChanged?.invoke(newDirection)
@@ -53,8 +47,6 @@ public class TiltController(context: Context) {
     public fun stop() {
         scope?.cancel()
         scope = null
-        smoothedX = 0f
-        smoothedY = 0f
     }
 
     public fun getCurrentDirection(): Direction = currentDirection
@@ -70,9 +62,9 @@ public class TiltController(context: Context) {
         if (absX < THRESHOLD && absY < THRESHOLD) return null
 
         return if (absX > absY) {
-            if (x > 0) Direction.RIGHT else Direction.LEFT
+            if (x > 0) Direction.UP else Direction.DOWN
         } else {
-            if (y > 0) Direction.DOWN else Direction.UP
+            if (y > 0) Direction.RIGHT else Direction.LEFT
         }
     }
 

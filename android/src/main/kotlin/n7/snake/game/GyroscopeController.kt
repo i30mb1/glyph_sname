@@ -9,10 +9,10 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-internal class AccelerometerController(context: Context) {
+internal class GyroscopeController(context: Context) {
 
     private val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    private val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+    private val gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
 
     val flow: Flow<SensorData> = callbackFlow {
         val listener = object : SensorEventListener {
@@ -22,7 +22,7 @@ internal class AccelerometerController(context: Context) {
             override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) = Unit
         }
 
-        sensorManager.registerListener(listener, accelerometer, SensorManager.SENSOR_DELAY_GAME)
+        sensorManager.registerListener(listener, gyroscope, SensorManager.SENSOR_DELAY_GAME)
 
         awaitClose {
             sensorManager.unregisterListener(listener)
