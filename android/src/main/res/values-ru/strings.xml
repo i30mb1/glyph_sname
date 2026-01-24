@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Glyph Snake</string>
+    <string name="toy_name">Glyph Snake</string>
+    <string name="toy_summary">Накорми голодную змейку! Наклоняй телефон, чтобы двигаться и собирать вкусняшки. Чем больше съешь — тем длиннее станешь!</string>
+</resources>

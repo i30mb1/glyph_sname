@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Snake</string>
-    <string name="toy_name">Snake</string>
-    <string name="toy_summary">Classic snake game controlled by tilting your phone</string>
+    <string name="app_name">Glyph Snake</string>
+    <string name="toy_name">Glyph Snake</string>
+    <string name="toy_summary">Feed the hungry snake! Tilt your phone to move and collect tasty treats. The more you eat, the longer you grow!</string>
 </resources>
