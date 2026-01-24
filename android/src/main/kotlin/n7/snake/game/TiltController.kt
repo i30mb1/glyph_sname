@@ -1,84 +1,85 @@
 package n7.snake.game
 
 import android.content.Context
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.scan
 import kotlin.math.abs
 
 public class TiltController(context: Context) {
 
-    private val gyroController = GyroSensorController(context)
+    private val accelerometer = AccelerometerController(context)
     private var currentDirection: Direction = Direction.RIGHT
     private var scope: CoroutineScope? = null
+
+    private var smoothedX = 0f
+    private var smoothedY = 0f
 
     public var onDirectionChanged: ((Direction) -> Unit)? = null
 
     private companion object {
-        const val TAG = "TiltController"
-        // Threshold for gyroscope angular velocity (rad/s)
-        const val GYRO_THRESHOLD = 1f
+        const val SMOOTHING = 0.15f
+        const val THRESHOLD = 2.5f
     }
 
     public fun start() {
-        Log.d(TAG, "start()")
         scope?.cancel()
         scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
-        scope?.launch {
-            gyroController.sensorFlow.collectLatest { data ->
-                processGyroData(data)
+
+        accelerometer.flow
+            .scan(SensorData(0f, 0f)) { prev, current ->
+                SensorData(
+                    x = prev.x * (1 - SMOOTHING) + current.x * SMOOTHING,
+                    y = prev.y * (1 - SMOOTHING) + current.y * SMOOTHING
+                )
             }
-        }
+            .onEach { data ->
+                smoothedX = data.x
+                smoothedY = data.y
+
+                val newDirection = getDirection(smoothedX, smoothedY)
+                if (newDirection != null && newDirection != currentDirection && !isOpposite(newDirection, currentDirection)) {
+                    currentDirection = newDirection
+                    onDirectionChanged?.invoke(newDirection)
+                }
+            }
+            .launchIn(scope!!)
     }
 
     public fun stop() {
-        Log.d(TAG, "stop()")
         scope?.cancel()
         scope = null
+        smoothedX = 0f
+        smoothedY = 0f
     }
 
     public fun getCurrentDirection(): Direction = currentDirection
 
     public fun setDirection(direction: Direction) {
-        Log.d(TAG, "setDirection($direction)")
         currentDirection = direction
     }
 
-    private fun processGyroData(data: SensorData) {
-        val absX = abs(data.x)
-        val absY = abs(data.y)
+    private fun getDirection(x: Float, y: Float): Direction? {
+        val absX = abs(x)
+        val absY = abs(y)
 
-        // Log for debugging
-        Log.d(TAG, "Gyro X:${String.format("%.2f", data.x)} Y:${String.format("%.2f", data.y)} Z:${String.format("%.2f", data.z)}")
+        if (absX < THRESHOLD && absY < THRESHOLD) return null
 
-        // Check if we're above threshold
-        if (absX < GYRO_THRESHOLD && absY < GYRO_THRESHOLD) {
-            return // Not enough movement
-        }
-
-        // Determine dominant axis and direction
-        val newDirection = if (absX > absY) {
-            // X dominant - pitch - UP or DOWN
-            // Positive X = tilting forward = UP
-            // Negative X = tilting backward = DOWN
-            if (data.x > GYRO_THRESHOLD) Direction.UP else Direction.DOWN
+        return if (absX > absY) {
+            if (x > 0) Direction.RIGHT else Direction.LEFT
         } else {
-            // Y dominant - roll - LEFT or RIGHT
-            // Positive Y = tilting right = RIGHT
-            // Negative Y = tilting left = LEFT
-            if (data.y > GYRO_THRESHOLD) Direction.RIGHT else Direction.LEFT
+            if (y > 0) Direction.DOWN else Direction.UP
         }
+    }
 
-        // Only send if direction changed (let SnakeGame validate opposite check)
-        if (newDirection != currentDirection) {
-            Log.d(TAG, ">>> DIRECTION: $currentDirection -> $newDirection")
-            currentDirection = newDirection
-            onDirectionChanged?.invoke(newDirection)
-        }
+    private fun isOpposite(a: Direction, b: Direction): Boolean {
+        return (a == Direction.UP && b == Direction.DOWN) ||
+                (a == Direction.DOWN && b == Direction.UP) ||
+                (a == Direction.LEFT && b == Direction.RIGHT) ||
+                (a == Direction.RIGHT && b == Direction.LEFT)
     }
 }
