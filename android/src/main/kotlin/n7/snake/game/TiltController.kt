@@ -19,7 +19,7 @@ public class TiltController(context: Context) {
     public var onDirectionChanged: ((Direction) -> Unit)? = null
 
     private companion object {
-        const val THRESHOLD = 1.5f
+        const val THRESHOLD = 3f
         const val DECAY = 0.95f
     }
 

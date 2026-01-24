@@ -170,24 +170,33 @@ public class SnakeGame(
     }
 
     private fun wrapPosition(x: Int, y: Int): Point {
-        // First wrap y within 0..24
+        val oldY = y.coerceIn(0, GRID_SIZE - 1)
+        val (oldMinX, oldMaxX) = VISIBLE_BOUNDS[oldY]
+        val oldWidth = oldMaxX - oldMinX + 1
+
+        // Wrap y within 0..24
         val wrappedY = when {
             y < 0 -> GRID_SIZE - 1
             y >= GRID_SIZE -> 0
             else -> y
         }
 
-        val (minX, maxX) = VISIBLE_BOUNDS[wrappedY]
-        val width = maxX - minX + 1
+        val (newMinX, newMaxX) = VISIBLE_BOUNDS[wrappedY]
+        val newWidth = newMaxX - newMinX + 1
 
-        // Wrap x within visible area for this row
-        val wrappedX = when {
-            x < minX -> maxX - (minX - x - 1) % width
-            x > maxX -> minX + (x - maxX - 1) % width
-            else -> x
+        // Calculate relative position (0.0 to 1.0) in old row and apply to new row
+        val wrappedX = if (y != wrappedY) {
+            val relativePos = (x - oldMinX).toFloat() / oldWidth
+            (newMinX + (relativePos * newWidth).toInt()).coerceIn(newMinX, newMaxX)
+        } else {
+            // Same row - just wrap x within visible area
+            when {
+                x < newMinX -> newMaxX - (newMinX - x - 1) % newWidth
+                x > newMaxX -> newMinX + (x - newMaxX - 1) % newWidth
+                else -> x
+            }
         }
 
-        // Log teleportation
         if (x != wrappedX || y != wrappedY) {
             Log.d("SnakeGame", "WRAP: ($x,$y) -> ($wrappedX,$wrappedY)")
         }
