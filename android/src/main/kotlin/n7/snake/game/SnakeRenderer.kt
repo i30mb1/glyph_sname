@@ -1,6 +1,7 @@
 package n7.snake.game
 
 import android.content.Context
+import android.util.Log
 import com.nothing.ketchum.GlyphMatrixFrame
 import com.nothing.ketchum.GlyphMatrixObject
 import com.nothing.ketchum.GlyphMatrixUtils
@@ -9,6 +10,7 @@ import kotlin.math.sin
 public class SnakeRenderer(private val context: Context) {
 
     private companion object {
+        const val TAG = "SnakeRenderer"
         const val HEAD_BRIGHTNESS = 209
         const val BODY_BRIGHTNESS = 100
         const val FOOD_BRIGHTNESS_HIGH = 4000
@@ -38,6 +40,8 @@ public class SnakeRenderer(private val context: Context) {
             val brightness = if (i == 0) HEAD_BRIGHTNESS else BODY_BRIGHTNESS
             setPixel(matrix, segment.x, segment.y, brightness)
         }
+
+        logMatrix(matrix)
 
         return GlyphMatrixFrame.Builder()
             .addMid(matrix)
@@ -84,6 +88,8 @@ public class SnakeRenderer(private val context: Context) {
             .setPosition(8, 9)
             .build()
 
+        logMatrix(matrix)
+
         return GlyphMatrixFrame.Builder()
             .addLow(textObject)
             .addTop(matrix)
@@ -105,5 +111,9 @@ public class SnakeRenderer(private val context: Context) {
         if (x in 0 until GRID_SIZE && y in 0 until GRID_SIZE) {
             matrix[y * GRID_SIZE + x] = brightness
         }
+    }
+
+    private fun logMatrix(matrix: IntArray) {
+        Log.d(TAG, matrix.joinToString(","))
     }
 }
