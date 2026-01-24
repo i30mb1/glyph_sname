@@ -66,7 +66,18 @@ public class SnakeRenderer(private val context: Context) {
             .build(context)
     }
 
-    public fun renderStartScreen(): GlyphMatrixFrame {
+    public fun renderStartScreen(game: SnakeGame): GlyphMatrixFrame {
+        val matrix = IntArray(GRID_SIZE * GRID_SIZE) { 0 }
+
+        // Render food (dimmed)
+        setPixel(matrix, game.food.x, game.food.y, FOOD_BRIGHTNESS_LOW)
+
+        // Render snake (dimmed)
+        for ((index, segment) in game.segments.withIndex()) {
+            val brightness = if (index == 0) HEAD_BRIGHTNESS else BODY_BRIGHTNESS
+            setPixel(matrix, segment.x, segment.y, brightness)
+        }
+
         val textObject = GlyphMatrixObject.Builder()
             .setText("GO")
             .setBrightness(2095)
@@ -74,7 +85,8 @@ public class SnakeRenderer(private val context: Context) {
             .build()
 
         return GlyphMatrixFrame.Builder()
-            .addMid(textObject)
+            .addLow(textObject)
+            .addTop(matrix)
             .build(context)
     }
 

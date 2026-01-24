@@ -80,10 +80,10 @@ public class SnakeController(context: Context) {
         Log.d(TAG, "onLongPress(), gameState: $gameState")
         when (gameState) {
             GameState.WAITING_TO_START -> {
-                startGame()
+                startGame(resetGame = false)
             }
             GameState.GAME_OVER -> {
-                startGame()
+                startGame(resetGame = true)
             }
             GameState.PLAYING -> {
                 // Do nothing during gameplay
@@ -91,9 +91,11 @@ public class SnakeController(context: Context) {
         }
     }
 
-    private fun startGame() {
-        Log.d(TAG, "startGame()")
-        game.reset()
+    private fun startGame(resetGame: Boolean) {
+        Log.d(TAG, "startGame(resetGame=$resetGame)")
+        if (resetGame) {
+            game.reset()
+        }
         renderer.reset()
         tiltController.setDirection(Direction.RIGHT)
         tiltController.start()
@@ -110,7 +112,7 @@ public class SnakeController(context: Context) {
     private fun renderFrame() {
         try {
             val frame = when (gameState) {
-                GameState.WAITING_TO_START -> renderer.renderStartScreen()
+                GameState.WAITING_TO_START -> renderer.renderStartScreen(game)
                 GameState.PLAYING -> renderer.render(game)
                 GameState.GAME_OVER -> renderer.renderGameOver(game)
             }

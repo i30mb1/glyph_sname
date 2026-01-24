@@ -77,9 +77,9 @@ public class SnakeGame(
         _score = 0
         _isGameOver = false
 
-        // Initialize snake in the center
+        // Initialize snake above center (to not overlap with "GO" text)
         val startX = gridWidth / 2
-        val startY = gridHeight / 2
+        val startY = 5
         for (i in 0 until INITIAL_LENGTH) {
             _segments.add(Point(startX - i, startY))
         }
