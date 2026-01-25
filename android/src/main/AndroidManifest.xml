@@ -5,7 +5,10 @@
 
     <uses-feature android:name="com.nothing.feature" android:required="true" />
 
-    <application android:theme="@style/Theme.App">
+    <application
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/Theme.App">
         <activity
             android:name="n7.snake.MainActivity"
             android:exported="true">
@@ -26,7 +29,7 @@
                 android:resource="@string/toy_name" />
             <meta-data
                 android:name="com.nothing.glyph.toy.image"
-                android:resource="@drawable/snake_icon" />
+                android:resource="@drawable/glyph_snake" />
             <meta-data
                 android:name="com.nothing.glyph.toy.summary"
                 android:resource="@string/toy_summary" />
