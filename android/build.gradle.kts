@@ -11,8 +11,24 @@ android {
         applicationId = "n7.snake"
         minSdk = 35
         targetSdk = 37
-        versionCode = 4
-        versionName = "1.0.3"
+        versionCode = 5
+        versionName = "1.1.0"
+    }
+
+    // Upload key from ~/.gradle/gradle.properties (n7.upload.*, or the shared kcal.upload.* key).
+    // Without it, release builds fall back to the debug key so a fresh clone still builds.
+    fun uploadProp(name: String): String? =
+        providers.gradleProperty("n7.upload.$name").orNull ?: providers.gradleProperty("kcal.upload.$name").orNull
+    val uploadStore = uploadProp("storeFile")
+    signingConfigs {
+        if (uploadStore != null) {
+            create("upload") {
+                storeFile = file(uploadStore)
+                storePassword = uploadProp("storePassword")
+                keyAlias = uploadProp("keyAlias")
+                keyPassword = uploadProp("keyPassword")
+            }
+        }
     }
 
     buildFeatures {
@@ -25,7 +41,7 @@ android {
             isDebuggable = false
             isShrinkResources = true
             isMinifyEnabled = true
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("upload") ?: signingConfigs.getByName("debug")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
