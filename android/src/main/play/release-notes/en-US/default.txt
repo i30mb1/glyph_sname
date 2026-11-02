@@ -3,3 +3,4 @@
 • Live snake preview on the main screen and quick how-to-play steps
 • Updated to Glyph Matrix SDK 2.0 and Android 17
 • Discover more n7 Glyph Toys right in the app
+• The screen stays in portrait while you tilt the phone to play
