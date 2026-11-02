@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "n7.snake"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "n7.snake"
         minSdk = 35
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 4
         versionName = "1.0.3"
     }
@@ -42,7 +42,8 @@ kotlin {
 }
 
 dependencies {
-    implementation(files("../libs/glyph-matrix-sdk-1.0.aar"))
+    implementation(files("../libs/glyph-matrix-sdk-2.0.aar"))
+    implementation("com.github.i30mb1:n7-glyph-ui:0.1.0")
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.runtime)
     implementation(libs.compose.ui)

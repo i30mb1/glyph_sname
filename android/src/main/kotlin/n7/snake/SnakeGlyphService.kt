@@ -8,6 +8,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.os.Messenger
 import android.util.Log
+import com.nothing.ketchum.Glyph
 import com.nothing.ketchum.GlyphMatrixFrame
 import com.nothing.ketchum.GlyphMatrixManager
 import com.nothing.ketchum.GlyphToy
@@ -76,6 +77,8 @@ public class SnakeGlyphService : Service(), GlyphMatrixManager.Callback {
 
     override fun onServiceConnected(componentName: ComponentName?) {
         Log.d(TAG, "onServiceConnected: $componentName")
+        // SDK 2.0 supports several devices; Snake needs the 25x25 matrix of Phone (3).
+        glyphManager.register(Glyph.DEVICE_23112)
         glyphManager.setGlyphMatrixTimeout(false)
         controller.start()
     }

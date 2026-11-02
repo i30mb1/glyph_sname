@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.nothing.ketchum.GlyphMatrixFrame
 import com.nothing.ketchum.GlyphMatrixObject
-import com.nothing.ketchum.GlyphMatrixUtils
 import kotlin.math.sin
 
 public class SnakeRenderer(private val context: Context) {
@@ -16,7 +15,7 @@ public class SnakeRenderer(private val context: Context) {
         const val FOOD_BRIGHTNESS_HIGH = 4000
         const val FOOD_BRIGHTNESS_LOW = 400
         const val FOOD_PULSE_STEPS = 30 // Number of steps for full pulse cycle
-        const val GRID_SIZE = GlyphMatrixUtils.MATRIX_SIZE
+        const val GRID_SIZE = SnakeGame.GRID_SIZE
         const val PI = 3.14159265f
     }
 

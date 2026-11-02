@@ -41,14 +41,14 @@ https://github.com/Nothing-Developer-Programme/GlyphMatrix-Developer-Kit
 SDK поставляется как AAR-файл. Добавьте его в проект:
 
 ```
-libs/glyph-matrix-sdk-1.0.aar
+libs/glyph-matrix-sdk-2.0.aar
 ```
 
 ### Зависимости в build.gradle.kts
 
 ```kotlin
 dependencies {
-    implementation(files("../libs/glyph-matrix-sdk-1.0.aar"))
+    implementation(files("../libs/glyph-matrix-sdk-2.0.aar"))
     // Для OrientationProvider (опционально)
     implementation(libs.play.services.location)
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import n7.glyph.ui.theme.N7GlyphTheme
 
 internal class MainActivity : ComponentActivity() {
 
@@ -12,7 +13,7 @@ internal class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            AppTheme {
+            N7GlyphTheme {
                 MainScreen()
             }
         }

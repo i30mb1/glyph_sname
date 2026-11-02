@@ -2,7 +2,7 @@
 
 ## Подключение
 
-AAR библиотека находится в `libs/glyph-matrix-sdk-1.0.aar`
+AAR библиотека находится в `libs/glyph-matrix-sdk-2.0.aar`
 
 ## Настройка AndroidManifest
 

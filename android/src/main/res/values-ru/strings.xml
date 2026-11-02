@@ -3,4 +3,11 @@
     <string name="app_name">Glyph Snake</string>
     <string name="toy_name">Glyph Snake</string>
     <string name="toy_summary">Накорми голодную змейку! Наклоняй телефон, чтобы двигаться и собирать вкусняшки. Чем больше съешь — тем длиннее станешь!</string>
+    <string name="main_hint">Наклоняй · зажми, чтобы начать</string>
+    <string name="main_preview_description">Превью змейки на Glyph Matrix</string>
+    <string name="main_step_activate">Включи Glyph Snake в Glyph-игрушках</string>
+    <string name="main_step_start">Зажми кнопку Glyph, чтобы начать</string>
+    <string name="main_step_play">Наклоняй телефон и ешь, чтобы расти</string>
+    <string name="activate_toy">Активировать игрушку</string>
+    <string name="app_settings">Настройки приложения</string>
 </resources>
