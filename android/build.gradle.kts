@@ -43,7 +43,7 @@ kotlin {
 
 dependencies {
     implementation(files("../libs/glyph-matrix-sdk-2.0.aar"))
-    implementation("com.github.i30mb1:n7-glyph-ui:0.1.0")
+    implementation("com.github.i30mb1:n7-glyph-ui:0.1.1")
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.runtime)
     implementation(libs.compose.ui)
