@@ -1,0 +1,5 @@
+• Brand-new look: dot-matrix design made for the Glyph Matrix
+• New app icon
+• Live snake preview on the main screen and quick how-to-play steps
+• Updated to Glyph Matrix SDK 2.0 and Android 17
+• Discover more n7 Glyph Toys right in the app

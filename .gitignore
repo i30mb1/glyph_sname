@@ -7,3 +7,4 @@ build
 android/release/*
 
 claude_task
+play-service-account.json

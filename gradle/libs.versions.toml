@@ -17,6 +17,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
 
 [plugins]
+play-publisher = { id = "com.github.triplet.play", version = "4.1.1" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 

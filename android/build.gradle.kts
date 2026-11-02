@@ -1,6 +1,17 @@
+import com.github.triplet.gradle.androidpublisher.ReleaseStatus
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.play.publisher)
+}
+
+// Google Play publishing. Store listing graphics and release notes live in src/main/play/.
+play {
+    serviceAccountCredentials.set(rootProject.file("play-service-account.json"))
+    defaultToAppBundles.set(true)
+    track.set("internal")
+    releaseStatus.set(ReleaseStatus.DRAFT)
 }
 
 android {
@@ -11,7 +22,7 @@ android {
         applicationId = "n7.snake"
         minSdk = 35
         targetSdk = 37
-        versionCode = 5
+        versionCode = 6
         versionName = "1.1.0"
     }
 
