@@ -6,12 +6,12 @@ plugins {
     alias(libs.plugins.play.publisher)
 }
 
-// Google Play publishing. Store listing graphics and release notes live in src/main/play/.
+// Google Play publishing: straight to production. Store listing graphics and release notes live in src/main/play/.
 play {
     serviceAccountCredentials.set(rootProject.file("play-service-account.json"))
     defaultToAppBundles.set(true)
-    track.set("internal")
-    releaseStatus.set(ReleaseStatus.DRAFT)
+    track.set("production")
+    releaseStatus.set(ReleaseStatus.COMPLETED)
 }
 
 android {
