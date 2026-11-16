@@ -22,8 +22,8 @@ android {
         applicationId = "n7.snake"
         minSdk = 35
         targetSdk = 37
-        versionCode = 7
-        versionName = "1.1.1"
+        versionCode = 8
+        versionName = "1.2.0"
     }
 
     // Upload key from ~/.gradle/gradle.properties (n7.upload.*, or the shared kcal.upload.* key).
@@ -50,10 +50,12 @@ android {
     buildTypes {
         release {
             isDebuggable = false
-            isShrinkResources = true
-            isMinifyEnabled = true
+            // R8: shrinks, optimizes and renames the code and drops unused resources.
+            // Keep rules: every file in src/main/keepRules/.
+            optimization {
+                enable = true
+            }
             signingConfig = signingConfigs.findByName("upload") ?: signingConfigs.getByName("debug")
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 }
@@ -70,7 +72,7 @@ kotlin {
 
 dependencies {
     implementation(files("../libs/glyph-matrix-sdk-2.0.aar"))
-    implementation("com.github.i30mb1:n7-glyph-ui:0.1.1")
+    implementation(libs.n7.glyph.ui)
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.runtime)
     implementation(libs.compose.ui)

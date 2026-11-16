@@ -5,6 +5,7 @@ compose-bom = "2026.01.00"
 activity = "1.10.1"
 material = "1.12.0"
 play-services-location = "21.3.0"
+n7GlyphUi = "0.3.2"
 
 [libraries]
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
@@ -15,9 +16,10 @@ compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services-location" }
+n7-glyph-ui = { group = "com.github.i30mb1", name = "n7-glyph-ui", version.ref = "n7GlyphUi" }
 
 [plugins]
-play-publisher = { id = "com.github.triplet.play", version = "4.1.1" }
+play-publisher = { id = "com.github.triplet.play", version = "4.1.2" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 

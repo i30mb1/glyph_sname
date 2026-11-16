@@ -8,12 +8,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -49,12 +54,18 @@ internal fun MainScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .systemBarsPadding()
-                .padding(start = 24.dp, end = 24.dp, top = 32.dp, bottom = 16.dp),
+                // The status bar stays outside the scroll, so scrolled content never runs under the clock.
+                .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal))
+                .verticalScroll(rememberScrollState())
+                // The gesture bar is inside it: the content scrolls under it, and the end of the page clears it.
+                .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
+                .padding(start = 24.dp, end = 24.dp, top = 32.dp, bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            // The name and, right under it, one line that says what the app is: the same pair as on the store pictures.
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 DotHeadline(lines = listOf("GLYPH", "SNAKE"), fontSize = 56.sp)
+                Text(stringResource(R.string.tagline), style = N7Type.Body, color = N7Colors.InkMuted)
                 SectionLabel(stringResource(R.string.main_hint))
             }
 
@@ -71,8 +82,6 @@ internal fun MainScreen() {
                 Step("02", stringResource(R.string.main_step_start))
                 Step("03", stringResource(R.string.main_step_play))
             }
-
-            Spacer(Modifier.weight(1f))
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 N7Button(

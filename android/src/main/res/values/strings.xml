@@ -3,6 +3,8 @@
     <string name="app_name">Glyph Snake</string>
     <string name="toy_name">Glyph Snake</string>
     <string name="toy_summary">Feed the hungry snake! Tilt your phone to move and collect tasty treats. The more you eat, the longer you grow!</string>
+    <!-- One line under the app name: what the app is. 40 characters at most so it stays on one line. -->
+    <string name="tagline">Classic snake on the Glyph Matrix.</string>
     <string name="main_hint">Tilt to move · long-press to start</string>
     <string name="main_preview_description">Preview of Snake on the Glyph Matrix</string>
     <string name="main_step_activate">Activate Glyph Snake in Glyph Toys</string>
