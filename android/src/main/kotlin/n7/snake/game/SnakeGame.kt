@@ -10,7 +10,7 @@ public class SnakeGame(
     public companion object {
         public const val GRID_SIZE: Int = 25
         private const val INITIAL_LENGTH = 4
-        private const val BASE_SPEED_MS = 200L
+        private const val BASE_SPEED_MS = 100L
         private const val MIN_SPEED_MS = 80L
         private const val SPEED_DECREASE_PER_FOOD = 5L
 
@@ -90,11 +90,15 @@ public class SnakeGame(
         Log.d("SnakeGame", "Food at: (${_food.x},${_food.y})")
     }
 
-    public fun changeDirection(newDirection: Direction) {
+    /**
+     * Queues a turn for the next tick. Returns false if the turn is rejected
+     * because it reverses the direction committed on the last tick.
+     */
+    public fun changeDirection(newDirection: Direction): Boolean {
         // Prevent 180-degree turns relative to COMMITTED direction (last tick)
-        if (!newDirection.isOpposite(_committedDirection)) {
-            _direction = newDirection
-        }
+        if (newDirection.isOpposite(_committedDirection)) return false
+        _direction = newDirection
+        return true
     }
 
     public fun update() {
@@ -111,8 +115,8 @@ public class SnakeGame(
         // Commit the direction that was actually used this tick
         _committedDirection = _direction
 
-        // Wrap position through visible area boundaries (teleportation)
-        newHead = wrapPosition(newHead.x, newHead.y)
+        // Keep the head on the visible circle (teleportation at the edges)
+        newHead = wrapPosition(newHead.x, newHead.y, head.y)
         Log.d("SnakeGame", "Head:(${head.x},${head.y})->${newHead.x},${newHead.y} Dir:$_direction")
 
         // Check self-collision (excluding tail which will move)
@@ -169,32 +173,43 @@ public class SnakeGame(
         return x in minX..maxX
     }
 
-    private fun wrapPosition(x: Int, y: Int): Point {
-        val oldY = y.coerceIn(0, GRID_SIZE - 1)
-        val (oldMinX, oldMaxX) = VISIBLE_BOUNDS[oldY]
-        val oldWidth = oldMaxX - oldMinX + 1
+    /**
+     * Maps a candidate head position onto the visible circle.
+     *
+     * [fromY] is the row the head was in before this move.
+     * - Vertical move into a cell outside the circle: the head keeps moving in the same
+     *   direction, wrapping past the top or bottom edge if needed, until it reaches a visible
+     *   cell in the same column. The column is visible at [fromY], so this always ends.
+     *   x is unchanged, so the snake body stays connected.
+     * - Horizontal move past the end of a row: wraps within that row.
+     */
+    private fun wrapPosition(x: Int, y: Int, fromY: Int): Point {
+        val direction = when {
+            y < fromY -> -1
+            y > fromY -> 1
+            else -> 0
+        }
 
-        // Wrap y within 0..24
-        val wrappedY = when {
+        var wrappedY = when {
             y < 0 -> GRID_SIZE - 1
             y >= GRID_SIZE -> 0
             else -> y
         }
 
-        val (newMinX, newMaxX) = VISIBLE_BOUNDS[wrappedY]
-        val newWidth = newMaxX - newMinX + 1
-
-        // Calculate relative position (0.0 to 1.0) in old row and apply to new row
-        val wrappedX = if (y != wrappedY) {
-            val relativePos = (x - oldMinX).toFloat() / oldWidth
-            (newMinX + (relativePos * newWidth).toInt()).coerceIn(newMinX, newMaxX)
-        } else {
-            // Same row - just wrap x within visible area
-            when {
-                x < newMinX -> newMaxX - (newMinX - x - 1) % newWidth
-                x > newMaxX -> newMinX + (x - newMaxX - 1) % newWidth
-                else -> x
+        if (direction != 0) {
+            while (!isVisibleAt(x, wrappedY)) {
+                wrappedY = (wrappedY + direction + GRID_SIZE) % GRID_SIZE
             }
+            return Point(x, wrappedY)
+        }
+
+        // Same row: wrap x within the visible part of the row
+        val (minX, maxX) = VISIBLE_BOUNDS[wrappedY]
+        val width = maxX - minX + 1
+        val wrappedX = when {
+            x < minX -> maxX - (minX - x - 1) % width
+            x > maxX -> minX + (x - maxX - 1) % width
+            else -> x
         }
 
         if (x != wrappedX || y != wrappedY) {
@@ -202,5 +217,10 @@ public class SnakeGame(
         }
 
         return Point(wrappedX, wrappedY)
+    }
+
+    private fun isVisibleAt(x: Int, y: Int): Boolean {
+        val (minX, maxX) = VISIBLE_BOUNDS[y]
+        return x in minX..maxX
     }
 }

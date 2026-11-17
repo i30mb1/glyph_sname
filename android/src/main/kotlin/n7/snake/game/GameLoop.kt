@@ -33,6 +33,17 @@ public class GameLoop(
 
     public fun isRunning(): Boolean = isRunning
 
+    /**
+     * Runs a tick immediately and restarts the interval from now.
+     * Used after a turn so the snake reacts without waiting for the next step.
+     */
+    public fun advanceNow() {
+        if (!isRunning) return
+        handler.removeCallbacks(tickRunnable)
+        onTick()
+        handler.postDelayed(tickRunnable, getIntervalMs())
+    }
+
     public fun restart() {
         stop()
         start()

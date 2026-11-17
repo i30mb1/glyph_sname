@@ -3,7 +3,6 @@ package n7.snake
 import android.content.Context
 import android.util.Log
 import com.nothing.ketchum.GlyphMatrixFrame
-import n7.snake.game.Direction
 import n7.snake.game.GameLoop
 import n7.snake.game.SnakeGame
 import n7.snake.game.SnakeRenderer
@@ -27,7 +26,8 @@ public class SnakeController(context: Context) {
 
     private val game = SnakeGame()
     private val renderer = SnakeRenderer(context)
-    private val tiltController = TiltController(context)
+    // Game is the single source of truth for the current direction
+    private val tiltController = TiltController(context) { game.direction }
 
     private var frameCallback: FrameCallback? = null
     private var isActive = false
@@ -42,7 +42,9 @@ public class SnakeController(context: Context) {
         tiltController.onDirectionChanged = { direction ->
             Log.d(TAG, "onDirectionChanged: $direction, gameState: $gameState")
             if (gameState == GameState.PLAYING) {
-                game.changeDirection(direction)
+                val accepted = game.changeDirection(direction)
+                Log.d(TAG, "turn $direction accepted=$accepted")
+                if (accepted) gameLoop.advanceNow()
             }
         }
 
@@ -97,7 +99,6 @@ public class SnakeController(context: Context) {
             game.reset()
         }
         renderer.reset()
-        tiltController.setDirection(Direction.RIGHT)
         tiltController.start()
         gameState = GameState.PLAYING
         gameLoop.start()

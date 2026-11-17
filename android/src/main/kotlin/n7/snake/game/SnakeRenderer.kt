@@ -113,6 +113,9 @@ public class SnakeRenderer(private val context: Context) {
     }
 
     private fun logMatrix(matrix: IntArray) {
-        Log.d(TAG, matrix.joinToString(","))
+        val lit = matrix.withIndex()
+            .filter { it.value != 0 }
+            .joinToString(" ") { (i, v) -> "(${i % GRID_SIZE},${i / GRID_SIZE})=$v" }
+        Log.d(TAG, "lit: $lit")
     }
 }

@@ -22,8 +22,8 @@ android {
         applicationId = "n7.snake"
         minSdk = 35
         targetSdk = 37
-        versionCode = 8
-        versionName = "1.2.0"
+        versionCode = 9
+        versionName = "1.2.1"
     }
 
     // Upload key from ~/.gradle/gradle.properties (n7.upload.*, or the shared kcal.upload.* key).
