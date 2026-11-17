@@ -12,11 +12,15 @@ import com.nothing.ketchum.Glyph
 import com.nothing.ketchum.GlyphMatrixFrame
 import com.nothing.ketchum.GlyphMatrixManager
 import com.nothing.ketchum.GlyphToy
+import android.os.SystemClock
+import n7.glyph.ui.support.Supporter
+import n7.glyph.ui.support.SupporterIntro
 
 public class SnakeGlyphService : Service(), GlyphMatrixManager.Callback {
 
     private companion object {
         const val TAG = "SnakeGlyphService"
+        const val INTRO_FRAME_MS = 40L
     }
 
     private lateinit var controller: SnakeController
@@ -30,6 +34,8 @@ public class SnakeGlyphService : Service(), GlyphMatrixManager.Callback {
                 when (event) {
                     GlyphToy.EVENT_CHANGE -> {
                         Log.d(TAG, "Long press detected")
+                        // A press during the supporter's opening skips it straight to the game.
+                        if (introRunning) finishIntro()
                         controller.onLongPress()
                     }
                     GlyphToy.EVENT_AOD -> Log.d(TAG, "AOD event")
@@ -41,6 +47,32 @@ public class SnakeGlyphService : Service(), GlyphMatrixManager.Callback {
     }
 
     private val messenger = Messenger(handler)
+
+    private val main = Handler(Looper.getMainLooper())
+    private var intro: SupporterIntro? = null
+    private var introStart = 0L
+    private var introRunning = false
+
+    /** The supporter's opening (the coffee once, then sparkles round the rim), then the game. */
+    private val introLoop = object : Runnable {
+        override fun run() {
+            val i = intro ?: return
+            val t = SystemClock.uptimeMillis() - introStart
+            if (t >= i.durationMs) {
+                finishIntro()
+                return
+            }
+            sendFrame(i.frame(t))
+            main.postDelayed(this, INTRO_FRAME_MS)
+        }
+    }
+
+    private fun finishIntro() {
+        if (!introRunning) return
+        introRunning = false
+        main.removeCallbacks(introLoop)
+        controller.start()
+    }
 
     override fun onBind(intent: Intent?): IBinder {
         Log.d(TAG, "onBind()")
@@ -69,6 +101,8 @@ public class SnakeGlyphService : Service(), GlyphMatrixManager.Callback {
 
     private fun clear() {
         Log.d(TAG, "clear()")
+        introRunning = false
+        main.removeCallbacks(introLoop)
         controller.stop()
         glyphManager.turnOff()
         glyphManager.closeAppMatrix()
@@ -80,11 +114,27 @@ public class SnakeGlyphService : Service(), GlyphMatrixManager.Callback {
         // SDK 2.0 supports several devices; Snake needs the 25x25 matrix of Phone (3).
         glyphManager.register(Glyph.DEVICE_23112)
         glyphManager.setGlyphMatrixTimeout(false)
-        controller.start()
+        val opening = SupporterIntro(Supporter.state(this))
+        if (opening.durationMs > 0) {
+            intro = opening
+            introStart = SystemClock.uptimeMillis()
+            introRunning = true
+            main.post(introLoop)
+        } else {
+            controller.start()
+        }
     }
 
     override fun onServiceDisconnected(componentName: ComponentName?) {
         Log.d(TAG, "onServiceDisconnected: $componentName")
+    }
+
+    private fun sendFrame(frame: IntArray) {
+        try {
+            glyphManager.setMatrixFrame(frame)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error sending frame", e)
+        }
     }
 
     private fun sendFrame(frame: GlyphMatrixFrame) {

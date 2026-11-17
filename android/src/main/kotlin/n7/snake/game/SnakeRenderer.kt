@@ -32,12 +32,12 @@ public class SnakeRenderer(private val context: Context) {
         val foodBrightness = FOOD_BRIGHTNESS_LOW + ((FOOD_BRIGHTNESS_HIGH - FOOD_BRIGHTNESS_LOW) * pulseValue).toInt()
         setPixel(matrix, game.food.x, game.food.y, foodBrightness)
 
-        // Render snake body (tail to head, so head overwrites if overlapping)
+        // Render snake body (tail to head, so head overwrites if overlapping), in the chosen skin
         val segments = game.segments
+        val skin = SnakeSkin.current(context)
         for (i in segments.indices.reversed()) {
             val segment = segments[i]
-            val brightness = if (i == 0) HEAD_BRIGHTNESS else BODY_BRIGHTNESS
-            setPixel(matrix, segment.x, segment.y, brightness)
+            setPixel(matrix, segment.x, segment.y, skin.level(i, segments.size))
         }
 
         logMatrix(matrix)
@@ -75,10 +75,10 @@ public class SnakeRenderer(private val context: Context) {
         // Render food (dimmed)
         setPixel(matrix, game.food.x, game.food.y, FOOD_BRIGHTNESS_LOW)
 
-        // Render snake (dimmed)
+        // Render snake in the chosen skin
+        val skin = SnakeSkin.current(context)
         for ((index, segment) in game.segments.withIndex()) {
-            val brightness = if (index == 0) HEAD_BRIGHTNESS else BODY_BRIGHTNESS
-            setPixel(matrix, segment.x, segment.y, brightness)
+            setPixel(matrix, segment.x, segment.y, skin.level(index, game.segments.size))
         }
 
         val textObject = GlyphMatrixObject.Builder()

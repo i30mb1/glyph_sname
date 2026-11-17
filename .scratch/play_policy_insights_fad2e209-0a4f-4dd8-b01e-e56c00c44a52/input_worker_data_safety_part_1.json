@@ -1,0 +1,23 @@
+{
+    "APP_DIR": "D:\\AndroidProject\\glyph_sname\\android",
+    "APP_NAME": "app_name",
+    "GOAL_NAME": "data_safety_part_1",
+    "PACKAGE_NAME": "n7.snake",
+    "REPO_ROOT": "C:\\Users\\eug79\\.android-studio\\skills\\play-policy-insights",
+    "TARGET_SDK": 37,
+    "TEMP_DIR": "D:\\AndroidProject\\glyph_sname\\.scratch\\play_policy_insights_fad2e209-0a4f-4dd8-b01e-e56c00c44a52",
+    "data_sources": {
+        "HEALTH": {
+            "description": "Information about a user's health, such as medical records or symptoms.",
+            "findings": [
+                "src\\main\\kotlin\\n7\\snake\\game\\GravityController.kt (Pattern: SensorManager)"
+            ]
+        }
+    },
+    "disclosure": [
+        "src\\main\\res\\values\\strings.xml (Pattern: collect)"
+    ],
+    "found_urls": [],
+    "requested_permissions": {},
+    "semantic_files": {}
+}

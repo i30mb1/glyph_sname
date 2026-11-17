@@ -1,0 +1,23 @@
+{
+    "findings": [
+        {
+            "psl_constant": "HEALTH",
+            "policy_id": "data_safety_section",
+            "issue_summary": "Data Safety Compliant (Local-Only): SensorManager reads the gravity vector to steer the snake; it is not health data and is never transmitted off-device",
+            "severity": "SUGGESTION",
+            "files_involved": [
+                "android/src/main/kotlin/n7/snake/game/GravityController.kt"
+            ],
+            "evidence": "GravityController.kt registers a SensorEventListener for Sensor.TYPE_GRAVITY (fallback TYPE_ACCELEROMETER) with SENSOR_DELAY_FASTEST and passes x/y values only to TiltController, which drives snake direction in memory. No network, storage, logger upload or share intent is involved. The SensorManager pattern match is a false positive for the HEALTH data type.",
+            "recommendation": "No Data Safety declaration for HEALTH is needed. Motion and orientation sensor data processed only on-device is not collected. Keep it that way: do not log these values to a remote logger.",
+            "is_transferred": false,
+            "user_initiated": false,
+            "is_third_party": false,
+            "prominent_disclosure_status": "EXEMPT",
+            "purpose": "Local functionality only",
+            "linked_to_user": false,
+            "worker_file": "worker_data_safety_part_1.json",
+            "finding_id": "1"
+        }
+    ]
+}

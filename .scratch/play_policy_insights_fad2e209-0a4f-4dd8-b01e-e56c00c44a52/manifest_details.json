@@ -1,0 +1,10 @@
+{
+    "app_dir": "D:\\AndroidProject\\glyph_sname\\android",
+    "app_label": "app_name",
+    "foreground_services": [],
+    "package_name": "n7.snake",
+    "permissions": [
+        "com.nothing.ketchum.permission.ENABLE"
+    ],
+    "target_sdk": 37
+}

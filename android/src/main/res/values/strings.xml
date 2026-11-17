@@ -12,4 +12,11 @@
     <string name="main_step_play">Tilt the phone to steer, eat to grow</string>
     <string name="activate_toy">Activate toy</string>
     <string name="app_settings">App settings</string>
+    <string name="skin_title">Snake</string>
+    <string name="skin_classic">Classic</string>
+    <string name="skin_gradient">Gradient</string>
+    <string name="skin_beads">Beads</string>
+    <string name="skin_comet">Comet</string>
+    <string name="skin_locked">For supporters: buy a coffee below</string>
+    <string name="supporter_perk">Three more snakes: gradient, beads and comet</string>
 </resources>

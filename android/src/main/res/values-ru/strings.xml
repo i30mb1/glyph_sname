@@ -11,4 +11,11 @@
     <string name="main_step_play">Наклоняй телефон и ешь, чтобы расти</string>
     <string name="activate_toy">Активировать игрушку</string>
     <string name="app_settings">Настройки приложения</string>
+    <string name="skin_title">Змейка</string>
+    <string name="skin_classic">Классика</string>
+    <string name="skin_gradient">Градиент</string>
+    <string name="skin_beads">Бусы</string>
+    <string name="skin_comet">Комета</string>
+    <string name="skin_locked">Для Supporter: угости кофе ниже</string>
+    <string name="supporter_perk">Ещё три змейки: градиент, бусы и комета</string>
 </resources>

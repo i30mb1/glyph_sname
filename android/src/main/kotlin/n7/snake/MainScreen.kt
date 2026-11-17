@@ -41,6 +41,20 @@ import n7.glyph.ui.components.N7ButtonVariant
 import n7.glyph.ui.components.SectionLabel
 import n7.glyph.ui.components.SignatureLabel
 import n7.glyph.ui.family.MoreFromN7
+import n7.glyph.ui.components.N7Card
+import n7.glyph.ui.support.SupporterSection
+import n7.glyph.ui.support.rememberSupporter
+import n7.snake.game.SnakeSkin
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.border
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
 import n7.glyph.ui.matrix.Cell
 import n7.glyph.ui.matrix.Frames
 import n7.glyph.ui.theme.N7Colors
@@ -114,6 +128,12 @@ internal fun MainScreen() {
                 )
             }
 
+            val supporter = rememberSupporter()
+            val supporterOwned by supporter.owned.collectAsState()
+            SkinCard(supporterOwned)
+
+            SupporterSection(perks = listOf(stringResource(R.string.supporter_perk)), supporter = supporter)
+
             MoreFromN7(Modifier.fillMaxWidth())
 
             SignatureLabel(Modifier.align(Alignment.CenterHorizontally))
@@ -147,3 +167,58 @@ private fun rememberDemoSnake(): List<Cell> {
     val food = Cell(12, 12, if (step % 6 < 3) 1f else 0.5f)
     return Frames.snake(body) + food
 }
+
+/** The snake's look: CLASSIC for everyone, three more for supporters, each with a small preview on a matrix. */
+@Composable
+private fun SkinCard(owned: Boolean) {
+    val context = LocalContext.current
+    var skin by remember(owned) { mutableStateOf(SnakeSkin.current(context)) }
+    N7Card(Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(vertical = 12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            SectionLabel(stringResource(R.string.skin_title))
+            for (s in SnakeSkin.entries) {
+                val unlocked = !s.supporter || owned
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .selectable(selected = s == skin, enabled = unlocked, role = Role.RadioButton) {
+                            skin = s
+                            SnakeSkin.save(context, s)
+                        }
+                        .alpha(if (unlocked) 1f else 0.45f)
+                        .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(14.dp),
+                ) {
+                    Box(
+                        Modifier
+                            .size(20.dp)
+                            .border(2.dp, if (s == skin) N7Colors.Ink else N7Colors.ControlBorder, CircleShape)
+                            .padding(5.dp),
+                    ) {
+                        if (s == skin) Box(Modifier.fillMaxSize().background(N7Colors.Ink, CircleShape))
+                    }
+                    Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                        Text(stringResource(skinName(s)), style = N7Type.Title, color = N7Colors.Ink)
+                        if (!unlocked) Text(stringResource(R.string.skin_locked), style = N7Type.BodyS, color = N7Colors.InkMuted)
+                    }
+                    GlyphMatrix(cells = skinPreview(s), modifier = Modifier.size(56.dp), glow = false)
+                }
+            }
+        }
+    }
+}
+
+/** A snake of ten segments across the middle, head on the right, in [skin]. */
+private fun skinPreview(skin: SnakeSkin): List<Cell> = (0 until 10).map { i ->
+    Cell(17 - i, 12, (skin.level(i, 10) / 2000f).coerceIn(0.12f, 1f))
+}
+
+private fun skinName(skin: SnakeSkin): Int = when (skin) {
+    SnakeSkin.CLASSIC -> R.string.skin_classic
+    SnakeSkin.GRADIENT -> R.string.skin_gradient
+    SnakeSkin.BEADS -> R.string.skin_beads
+    SnakeSkin.COMET -> R.string.skin_comet
+}
+

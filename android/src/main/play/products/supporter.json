@@ -1,0 +1,20 @@
+{
+  "sku": "supporter",
+  "status": "active",
+  "purchaseType": "managedUser",
+  "defaultPrice": {
+    "priceMicros": "2990000",
+    "currency": "USD"
+  },
+  "defaultLanguage": "en-US",
+  "listings": {
+    "en-US": {
+      "title": "Supporter",
+      "description": "A coffee for the developer. Three more snakes: gradient, beads and comet."
+    },
+    "ru-RU": {
+      "title": "Supporter",
+      "description": "Кофе разработчику. Ещё три змейки: градиент, бусы и комета."
+    }
+  }
+}

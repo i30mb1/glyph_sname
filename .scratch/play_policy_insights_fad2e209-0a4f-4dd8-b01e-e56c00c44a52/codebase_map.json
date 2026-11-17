@@ -1,0 +1,10 @@
+{
+    "key_files": {
+        "gradles": [
+            "D:\\AndroidProject\\glyph_sname\\android\\build.gradle.kts"
+        ],
+        "manifests": [
+            "D:\\AndroidProject\\glyph_sname\\android\\src\\main\\AndroidManifest.xml"
+        ]
+    }
+}

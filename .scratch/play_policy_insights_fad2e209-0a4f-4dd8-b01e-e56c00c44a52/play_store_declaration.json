@@ -1,0 +1,19 @@
+{
+    "app_info": {
+        "content_rating": "Everyone"
+    },
+    "category": "GAME_ARCADE",
+    "data_safety": {
+        "data_collected": [],
+        "data_shared": []
+    },
+    "description": "Feed the hungry snake! Tilt your phone to move and collect tasty treats",
+    "developer": "i30mb1",
+    "developer_links": {
+        "privacy_policy_url": "https://i30mb1.github.io/AD2/policy/index.html"
+    },
+    "is_published": true,
+    "package_name": "n7.snake",
+    "store_url": "https://play.google.com/store/apps/details?id=n7.snake&hl=en&gl=US",
+    "title": "Glyph Snake"
+}
